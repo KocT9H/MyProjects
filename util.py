@@ -2,7 +2,6 @@
 """
 Created on Mon Sep  9 13:50:34 2019
 
-Based on MIT course:
 © MIT 6.S191: Introduction to Deep Learning
 introtodeeplearning.com
 
