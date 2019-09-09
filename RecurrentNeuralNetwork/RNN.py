@@ -44,9 +44,7 @@ def CreateCharIntDB(fileStr) :
     return [vocabulary, char2idx, idx2char, dataAsInt]
     
 
-def CreateTrainingExamples(dataLen, dataAsInt, singleInputLen):
-    examplesPerEpoch = dataLen // singleInputLen
-    
+def CreateTrainingExamples(dataLen, dataAsInt, singleInputLen, BATCH_SIZE, BUFFER_SIZE):
     # Convert the text vector into a stream of character indices
     charDataset = tf.data.Dataset.from_tensor_slices(dataAsInt)
     
@@ -55,7 +53,11 @@ def CreateTrainingExamples(dataLen, dataAsInt, singleInputLen):
     
     # Define the input and target texts for each sequence
     dataSet = sequences.map(SplitInputTarget)
-    return [dataSet, examplesPerEpoch]
+
+    # Shuffle the data for the purpose of stochastic gradient descent
+    # Pack it into batches which will be used during training
+    dataSet = dataSet.shuffle(BUFFER_SIZE).batch(BATCH_SIZE, drop_remainder=True)
+    return dataSet
 
 
 def SplitInputTarget(chunk):
@@ -64,14 +66,6 @@ def SplitInputTarget(chunk):
     return inputText, targetText
 
 
-def CreateTrainingBatches(dataSet, examplesPerEpoch, BATCH_SIZE, BUFFER_SIZE):
-    stepsPerEpoch = examplesPerEpoch // BATCH_SIZE
-    # Shufle the data for the purpose of stochastic gradient descent
-    # Pack it into batches which will be used during training
-    dataSet = dataSet.shuffle(BUFFER_SIZE).batch(BATCH_SIZE, drop_remainder=True)
-    return [dataSet, stepsPerEpoch]
-   
-    
 def DefineRNNModel(vocabSize, embeddingDimension, rnnUnits, batchSize):
     LSTM = functools.partial(tf.keras.layers.LSTM, recurrent_activation='sigmoid')
     LSTM = functools.partial(LSTM, 
@@ -126,7 +120,7 @@ def TrainRNNModel(model, dataSet, EPOCHS_NUM):
         model.save_weights(checkpoint_prefix.format(epoch=epoch))
 
     print(f'Final loss %: {loss.numpy().mean()}')
-    return [model, checkpoint_dir]
+    return checkpoint_dir
 
 
 def ComputeLoss(labels, logits):
@@ -162,7 +156,7 @@ def PredictText(model, start_string, char2idx, idx2char, generation_length=1000)
       
         text_generated.append(idx2char[predicted_id])
 
-    return (start_string + ''.join(text_generated))
+    return start_string + ''.join(text_generated)
 
 
 def main():
@@ -179,15 +173,13 @@ def main():
     
     [vocabulary, char2idx, idx2char, dataAsInt] = CreateCharIntDB(fileStr)
     
-    [dataSet, examplesPerEpoch] = CreateTrainingExamples(len(fileStr), dataAsInt, singleInputLen)
-    
-    [dataSet, stepsPerEpoc] = CreateTrainingBatches(dataSet, examplesPerEpoch, BATCH_SIZE, BUFFER_SIZE)
+    dataSet = CreateTrainingExamples(len(fileStr), dataAsInt, singleInputLen, BATCH_SIZE, BUFFER_SIZE)
     
     [model, LSTM] = DefineRNNModel(len(vocabulary), embeddingDimension, rnnUnits, BATCH_SIZE)
     
-    [model, checkpoint_dir] = TrainRNNModel(model, dataSet, EPOCHS_NUM)
+    checkpoint_dir = TrainRNNModel(model, dataSet, EPOCHS_NUM)
     
-    model = RebuildModelWithDifferentBatch(LSTM, 
+    model = RebuildModelWithDifferentBatch(LSTM,
                                            len(vocabulary), 
                                            embeddingDimension, 
                                            rnnUnits, 
@@ -196,5 +188,6 @@ def main():
     
     text = PredictText(model, 'k', char2idx, idx2char)
     print(f'Predicted text:\n{text}')
-    
+
+
 if __name__ == "__main__": main()
