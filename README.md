@@ -1,6 +1,6 @@
 # MyProjects
 
-My name is Konstantin Verein. I'm Software engineer from Intel
+My name is Konstantin Verein. I'm Software Engineer from Intel
 
 Please visit my blog at: https://kvsoftware.net
 
