@@ -1,5 +1,4 @@
 # MyProjects
-My pet projects on various subjects
 
 My name is Konstantin Verein. I'm Software engineer from Intel
 
