@@ -6,7 +6,7 @@ Visit my blog at: https://kvsoftware.net
 
 Project list:
 
-RecurrentNeuralNetwork:
+RecurrentNeuralNetwork (RNN):
 Used to solve sequence modeling problem. Uses LSTM to 'memorize' data from previous observations.
 Example implements text prediction based on learned text (sequence of characters)
                         
