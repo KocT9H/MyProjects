@@ -24,7 +24,7 @@ class RNN:
     rnnUnits = 1024
     batchSize = 64
     bufferSize = 10000
-    epochsNum = 1
+    epochsNum = 2
 
     def __init__(self, vocabSize, dataAsInt):
         tf.enable_eager_execution()
