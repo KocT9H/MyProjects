@@ -15,6 +15,7 @@ introtodeeplearning.com
 
 import tensorflow as tf
 import numpy as np
+
 tf.enable_eager_execution()
 
 # Get MNIST DB
@@ -30,7 +31,7 @@ def build_cnn_model():
     cnnModel = tf.keras.Sequential([
         tf.keras.layers.Conv2D(filters=24, kernel_size=(3, 3), input_shape=(28, 28, 1), activation=tf.nn.relu),
         tf.keras.layers.MaxPool2D(pool_size=(2, 2)),
-        tf.keras.layers.Conv2D(filters=36, kernel_size=(3, 3), activation=tf.nn.relu),  # TODO
+        tf.keras.layers.Conv2D(filters=36, kernel_size=(3, 3), activation=tf.nn.relu),
         tf.keras.layers.MaxPool2D(pool_size=(2, 2)),
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(128, activation=tf.nn.relu),
@@ -43,9 +44,9 @@ def build_cnn_model():
 cnn_model = build_cnn_model()
 print(cnn_model.summary())
 
-cnn_model.compile(optimizer=tf.train.GradientDescentOptimizer(learning_rate=1e-1),
-              loss='sparse_categorical_crossentropy',
-              metrics=['accuracy'])
+cnn_model.compile(optimizer=tf.train.GradientDescentOptimizer(learning_rate=0.1),
+                  loss='sparse_categorical_crossentropy',
+                  metrics=['accuracy'])
 
 # Define the batch size and the number of epochs to use during training
 batchSize = 64

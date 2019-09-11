@@ -40,7 +40,7 @@ def build_fc_model():
 
 # Create Fully Connected model
 model = build_fc_model()
-model.compile(optimizer=tf.train.GradientDescentOptimizer(learning_rate=1e-1),
+model.compile(optimizer=tf.train.GradientDescentOptimizer(learning_rate=0.1),
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
 
