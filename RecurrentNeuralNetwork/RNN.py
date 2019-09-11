@@ -20,12 +20,15 @@ import matplotlib.pyplot as plt
 
 class RNN:
     singleInputLen = 100
-    embeddingDimension = 256
-    rnnUnits = 1024
-    batchSize = 64
+    
+    #RNN network params
+    embeddingDimension = 128
+    rnnUnits = 512
+    batchSize = 16
     bufferSize = 10000
-    # Increase epoch number to achieve better results
-    epochsNum = 2
+    
+    # Increase epoch number to achieve better results.
+    epochsNum = 3
 
     def __init__(self, vocabSize, dataAsInt):
         tf.enable_eager_execution()
