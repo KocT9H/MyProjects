@@ -25,12 +25,6 @@ train_labels = np.int64(train_labels)
 test_images = np.expand_dims(test_images, axis=-1) / 255.
 test_labels = np.int64(test_labels)
 
-# Create Fully Connected model
-model = build_fc_model()
-model.compile(optimizer=tf.train.GradientDescentOptimizer(learning_rate=1e-1),
-              loss='sparse_categorical_crossentropy',
-              metrics=['accuracy'])
-
 
 def build_fc_model():
     fc_model = tf.keras.Sequential([
@@ -43,6 +37,12 @@ def build_fc_model():
     ])
     return fc_model
 
+
+# Create Fully Connected model
+model = build_fc_model()
+model.compile(optimizer=tf.train.GradientDescentOptimizer(learning_rate=1e-1),
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
 
 # Define the batch size and the number of epochs to use during training
 batchSize = 64
