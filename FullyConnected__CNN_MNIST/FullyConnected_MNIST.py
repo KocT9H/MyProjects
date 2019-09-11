@@ -17,19 +17,6 @@ import tensorflow as tf
 import numpy as np
 tf.enable_eager_execution()
 
-
-def build_fc_model():
-    fc_model = tf.keras.Sequential([
-        # Define a Flatten layer
-        tf.keras.layers.Flatten(),
-        # Define hidden layer of 128
-        tf.keras.layers.Dense(128, activation=tf.nn.relu),
-        # Define result
-        tf.keras.layers.Dense(10, activation=tf.nn.softmax)
-    ])
-    return fc_model
-
-
 # Get MNIST DB
 mnist = tf.keras.datasets.mnist
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
@@ -43,6 +30,19 @@ model = build_fc_model()
 model.compile(optimizer=tf.train.GradientDescentOptimizer(learning_rate=1e-1),
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
+
+
+def build_fc_model():
+    fc_model = tf.keras.Sequential([
+        # Define a Flatten layer
+        tf.keras.layers.Flatten(),
+        # Define hidden layer of 128
+        tf.keras.layers.Dense(128, activation=tf.nn.relu),
+        # Define result
+        tf.keras.layers.Dense(10, activation=tf.nn.softmax)
+    ])
+    return fc_model
+
 
 # Define the batch size and the number of epochs to use during training
 batchSize = 64
