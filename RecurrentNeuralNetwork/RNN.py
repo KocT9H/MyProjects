@@ -2,7 +2,7 @@
 """
 Example of Recurrent Neural Network (RNN) in action
 
-@author: KocT9H
+@author: Konstantin Verein
 @Email:  koct9h@gmail.com
 
 Based on MIT course:
