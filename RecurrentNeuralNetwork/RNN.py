@@ -2,7 +2,7 @@
 """
 Example of Recurrent Neural Network (RNN) in action
 
-@author: Konstantin Verein
+@author: KocT9H
 @Email:  koct9h@gmail.com
 
 Based on MIT course:
@@ -15,7 +15,7 @@ import tensorflow as tf
 import numpy as np
 import os
 import functools
-import util
+import matplotlib.pyplot as plt
 
 
 class RNN:
@@ -24,7 +24,8 @@ class RNN:
     rnnUnits = 1024
     batchSize = 64
     bufferSize = 10000
-    epochsNum = 2
+    # Increase epoch number to achieve better results.
+    epochsNum = 1
 
     def __init__(self, vocabSize, dataAsInt):
         tf.enable_eager_execution()
@@ -71,9 +72,9 @@ class RNN:
     def TrainRNNModel(self):
         self.checkpoint_dir = './training_checkpoints'
         checkpoint_prefix = os.path.join(self.checkpoint_dir, "ckpt_{epoch}")
-        history = []
-        plotter = util.PeriodicPlotter(sec=1, xlabel='Iterations', ylabel='Loss')
+        lossHistory = []
         for epoch in range(RNN.epochsNum):
+            print(f'Run epoch: {epoch}')
             self.model.reset_states()
             for inp, target in self.dataSet:
                 with tf.GradientTape() as tape:
@@ -84,13 +85,13 @@ class RNN:
                 grads = tape.gradient(loss, self.model.trainable_variables)
                 self.optimizer.apply_gradients(zip(grads, self.model.trainable_variables))
 
-                # Update the progress bar!
-                history.append(loss.numpy().mean())
-                plotter.plot(history)
+                lossHistory.append(loss.numpy().mean())
+                print(f'Current loss %: {loss.numpy().mean()}')
 
             # Update the model with the changed weights!
             self.model.save_weights(checkpoint_prefix.format(epoch=epoch))
         print(f'Final loss %: {loss.numpy().mean()}')
+        DisplayPlot(lossHistory)
 
     def RebuildModelWithDifferentBatch(self, newBatch):
         self.BuildModel(newBatch)
@@ -128,6 +129,14 @@ def SplitInputTarget(chunk):
     return inputText, targetText
 
 
+def DisplayPlot(plotData):
+    print('Preparing plot! To continue, please close the plot window')
+    plt.xlabel('Iterations')
+    plt.ylabel('Loss')
+    plt.plot(plotData)
+    plt.show()
+
+
 def GenerateData():
     tempStr = ''
     for i in range(0, 10000):
@@ -156,6 +165,7 @@ def CreateCharIntDB(fileStr):
 
 def main():
     # GenerateData()
+
     fileStr = GetDataFromFile()
     [vocabulary, char2idx, idx2char, dataAsInt] = CreateCharIntDB(fileStr)
 
