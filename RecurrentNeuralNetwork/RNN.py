@@ -24,7 +24,7 @@ class RNN:
     rnnUnits = 1024
     batchSize = 64
     bufferSize = 10000
-    # Increase epoch number to achieve better results.
+    # Increase epoch number to achieve better results
     epochsNum = 2
 
     def __init__(self, vocabSize, dataAsInt):
